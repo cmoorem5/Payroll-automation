@@ -1,29 +1,21 @@
+
 import streamlit as st
 import pandas as pd
 from io import BytesIO
 import datetime
 
-st.set_page_config(page_title="BMF Payroll Generator", layout="wide")
-st.title("🟦 BMF Payroll Generator")
-st.markdown("""
-<style>
-    .block-container {
-        padding-top: 2rem;
-    }
-</style>
-""", unsafe_allow_html=True)
+st.set_page_config(page_title="Payroll Automation Tool", layout="wide")
+st.title("📋 RN Payroll Generator")
 
-st.sidebar.image("https://i.imgur.com/Su9fE4Z.png", width=200)
-
+# Sidebar for uploads
 st.sidebar.header("Upload Files")
 schedule_file = st.sidebar.file_uploader("Upload Crew Schedule (.xlsx)", type=["xlsx"])
 latecall_file = st.sidebar.file_uploader("Upload Late Call Report (.xlsx)", type=["xlsx"])
 
+# Helper function to generate payroll structure
 def generate_payroll(schedule_df, staff_df, late_df):
     dates = schedule_df.iloc[0, 2:12].tolist()
     date_strs = [pd.to_datetime(d).strftime('%Y-%m-%d') if pd.notna(d) else None for d in dates]
-    week1 = date_strs[:7]
-    week2 = date_strs[7:]
 
     valid_rows = schedule_df.drop(index=list(range(46, 53)) + list(range(93, 116)), errors='ignore')
     name_id_map = dict(zip(staff_df['Nurses'].astype(str).str.strip(), staff_df['ID']))
@@ -123,9 +115,9 @@ def generate_payroll(schedule_df, staff_df, late_df):
     final_df["Total"] = final_df.iloc[:, 1:].apply(
         lambda row: sum([float(x) if pd.notna(x) and str(x).replace('.', '', 1).isdigit() else 0 for x in row]), axis=1
     )
-
     return final_df
 
+# Main processing
 if schedule_file and latecall_file:
     try:
         schedule_excel = pd.ExcelFile(schedule_file)
@@ -145,7 +137,7 @@ if schedule_file and latecall_file:
             st.download_button(
                 label="📥 Download Payroll File",
                 data=output.getvalue(),
-                file_name=f"bmf_payroll_{datetime.date.today()}.xlsx",
+                file_name=f"payroll_{datetime.date.today()}.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
 
