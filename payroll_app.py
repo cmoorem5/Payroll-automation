@@ -140,7 +140,7 @@ if schedule_file and latecall_file:
         'background-color: #f2f2f2' if row.name % 8 == 0 else ''
         for _ in row
     ], axis=1)
-st.write(styled)
+            st.write(styled)
 
             output = BytesIO()
             with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
