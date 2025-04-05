@@ -144,6 +144,12 @@ if schedule_file and latecall_file:
             totals_row = ["Totals"] + [""] * (len(final_output.columns) - len(totals) - 2) + totals.tolist()
             total_df = pd.DataFrame([totals_row], columns=final_output.columns)
             final_output = pd.concat([final_output, total_df], ignore_index=True)
+            # Append totals row at the end
+            numeric_cols = final_output.select_dtypes(include="number").columns
+            totals = final_output[numeric_cols].sum(numeric_only=True)
+            totals_row = ["Totals"] + [""] * (len(final_output.columns) - len(totals) - 2) + totals.tolist()
+            total_df = pd.DataFrame([totals_row], columns=final_output.columns)
+            final_output = pd.concat([final_output, total_df], ignore_index=True)
 
     # Append totals row at the end
     numeric_cols = final_output.select_dtypes(include='number').columns
