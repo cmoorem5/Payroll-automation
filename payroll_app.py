@@ -129,6 +129,21 @@ if schedule_file and latecall_file:
         st.success("Files uploaded successfully.")
 
         if st.sidebar.button("Generate Payroll"):
+    final_output = generate_payroll(rn_df, staff_df, late_df)
+    ordered_dates = list(final_output.columns[1:-1])  # skip first and last columns
+
+    styled = final_output.style \
+        .apply(lambda row: [
+            'background-color: #e6f7ff' if col and col[:10] in ordered_dates[:7] else
+            'background-color: #fff0f5' if col and col[:10] in ordered_dates[7:] else ''
+            for col in final_output.columns
+        ], axis=1) \
+        .apply(lambda row: [
+            'background-color: #f2f2f2' if row.name % 8 == 0 else ''
+            for _ in row
+        ], axis=1)
+
+    st.write(styled.format("{:.2f}"))
             final_output = generate_payroll(rn_df, staff_df, late_df)
             ordered_dates = list(final_output.columns[1:-1])  # skip first and last columns
             styled = final_output.style \
@@ -141,7 +156,6 @@ if schedule_file and latecall_file:
         'background-color: #f2f2f2' if row.name % 8 == 0 else ''
         for _ in row
     ], axis=1)
-                            st.write(styled.format("{:.2f}"))
 
             output = BytesIO()
             with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
