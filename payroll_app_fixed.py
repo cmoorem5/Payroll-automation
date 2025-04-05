@@ -5,7 +5,7 @@ from io import BytesIO
 import datetime
 
 st.set_page_config(page_title="Payroll Automation Tool", layout="wide")
-st.title("📋 RN Payroll Generator")
+st.title("📋 Payroll Generator")
 
 # Sidebar for uploads
 st.sidebar.header("Upload Files")
