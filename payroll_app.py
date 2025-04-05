@@ -136,7 +136,7 @@ if schedule_file and latecall_file:
                     for _ in row
                 ], axis=1)
 
-            st.write(styled.format("{:.2f}"))
+            st.write(styled.format({col: "{:.2f}" for col in final_output.select_dtypes(include="number").columns}))
 
             output = BytesIO()
             with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
