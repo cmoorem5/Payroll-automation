@@ -130,6 +130,7 @@ if schedule_file and latecall_file:
 
         if st.sidebar.button("Generate Payroll"):
             final_output = generate_payroll(rn_df, staff_df, late_df)
+            ordered_dates = list(final_output.columns[1:-1])  # skip first and last columns
             styled = final_output.style \
     .apply(lambda row: [
         'background-color: #e6f7ff' if col and col[:10] in ordered_dates[:7] else
