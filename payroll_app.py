@@ -73,9 +73,10 @@ def generate_payroll(schedule_df, staff_df, late_df):
 
     df = pd.DataFrame(records)
     df['Name'] = df.apply(
-        lambda row: row['Name'] if pd.notna(row['Name']) else staff_df.loc[
-            staff_df['ID'] == row['Employee ID'], 'Nurses'
-        ].values[0] if row['Employee ID'] in staff_df['ID'].values else None,
+        lambda row: row['Name'] if pd.notna(row['Name']) else (
+            staff_df.loc[staff_df['ID'] == row['Employee ID'], 'Nurses'].iloc[0]
+            if not staff_df.loc[staff_df['ID'] == row['Employee ID'], 'Nurses'].empty else None
+        ),
         axis=1
     )
     df['Employee'] = df['Name'] + " (" + df['Employee ID'] + ")"
